@@ -33,8 +33,8 @@ let posts = [
     },
     {
         bookID: 4,
-        title: "Bilgewater is a bustling, chaotic port city in the League of Legends universe, located on the western coast of Runeterra. Known for its rough-and-tumble atmosphere, it’s a hub for pirates, smugglers, and mercenaries, where danger and opportunity are around every corner.",
-        content: "Lorem Ipsum",
+        title: "Bilgewater",
+        content: "Bilgewater is a bustling, chaotic port city in the League of Legends universe, located on the western coast of Runeterra. Known for its rough-and-tumble atmosphere, it’s a hub for pirates, smugglers, and mercenaries, where danger and opportunity are around every corner.",
         author: "John Bryan",
         date: "2010-07-28",
         publisher: "Riot Games",
@@ -49,6 +49,13 @@ let posts = [
 
     }]
 
+//node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+
+app.get('/posts', (req, res) => {
+    res.json(posts);
+
+});
+
 app.get('/posts/:bookID', (req, res) => {
     const bookID = parseInt(req.params.bookID);
     console.log(bookID);
@@ -59,7 +66,7 @@ app.get('/posts/:bookID', (req, res) => {
     res.json(posts[index]);
 });
 
-app.patch('/edit/:author', (req, res) => {
+app.patch('/edit/:bookID', (req, res) => {
     const bookID = parseInt(req.params.bookID);
     const index = posts.findIndex((element) => element.bookID === bookID);
     console.log(posts[index]);
@@ -71,12 +78,10 @@ app.patch('/edit/:author', (req, res) => {
         "author": req.body.author || posts[index].author,
         "date": req.body.date || posts[index].date,
         "publisher": req.body.publisher || posts[index].publisher,
-
     }
 
-
     posts[index] = updatedData;
-    res.json(posts[index]);
+    res.json(updatedData);
 });
 
 app.post('/upload', (req, res) => {
@@ -106,29 +111,25 @@ app.post('/upload', (req, res) => {
 
 });
 
-app.put('/update/:bookID', (req, res) => {
-    const bookID = parseInt(req.params.bookID);
-    const index = posts.findIndex((element) => element.bookID === bookID);
-
-    const updatedData = {
-        bookID: bookID,
-        title: req.body.title || posts[index].title,
-        content: req.body.content || posts[index].content,
-        author: req.body.author || posts[index].author,
-        date: req.body.date || posts[index].date,
-        publisher: req.body.publisher || posts[index].publisher,
-    };
-
-    posts[index] = updatedData;
-
-    res.json(updatedData);
-});
 
 
 app.delete('/delete/:bookID', (req, res) => {
     const bookID = parseInt(req.params.bookID);
     posts = posts.filter(p => p.bookID !== bookID);
-    res.status(204).send();
+
+    res.json({ message: "Successful" });
+});
+
+
+app.post('/login', (req, res) => {
+    const { username, password } = req.body;
+
+
+
+    if (username === 'admin' && password === 'admin123') {
+        return res.json({ message: 'Login success!' });
+    }
+
 });
 
 
