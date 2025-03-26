@@ -1,5 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import auth from "./middleware/authenticate.js";
+
 const app = express()
 const port = 3000;
 app.use(bodyParser.json());
@@ -51,12 +53,12 @@ let posts = [
 
 //node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 
-app.get('/posts', (req, res) => {
+app.get('/posts', auth, (req, res) => {
     res.json(posts);
 
 });
 
-app.get('/posts/:bookID', (req, res) => {
+app.get('/posts/:bookID', auth, (req, res) => {
     const bookID = parseInt(req.params.bookID);
     console.log(bookID);
 

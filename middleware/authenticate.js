@@ -4,11 +4,13 @@ dotenv.config();
 const secretKey = process.env.SECRET_KEY;
 
 export default function auth(req, res, next) {
-    const key = req.headers.authorization;
+    const authHeader = req.headers.authorization;
 
-    if (!key) {
+    if (!authHeader) {
         res.status(401).json({ message: "Unauthorized" });
     }
+
+    const key = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : authHeader;
 
     if (key === secretKey) {
         next();
@@ -16,5 +18,6 @@ export default function auth(req, res, next) {
         res.status(401).json({ message: "Unauthorized" });
     }
 
+    console.log(authHeader);
 }
 
